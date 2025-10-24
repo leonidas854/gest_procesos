@@ -1,0 +1,10 @@
+/* app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Puedes añadir tus estilos globales aquí */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}

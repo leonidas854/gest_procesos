@@ -1,0 +1,70 @@
+.header {
+  text-align: center;
+  padding: 10px;
+  color: black;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.header-title {
+  font-size: 6rem;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-family: 'J', serif;
+}
+
+.header-subtitle {
+  font-size: 2rem;
+  margin-bottom: 5px;
+  font-family: 'C', serif;
+}
+
+.header-question {
+  font-size: 1.1rem;
+  font-style: italic;
+  margin-top: 15px;
+}
+
+.typing {
+display: flex;
+  justify-content: center; 
+  padding-top: 10px;
+}
+
+.typing-effect {
+  width: 37ch;
+  animation: typing 2s steps(37), effect .5s step-end infinite alternate;
+  /*animation-duration: 10s;*/
+  /*animation-iteration-count: infinite;*/
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 1px solid;
+  font-family: monospace;
+  font-size: 2em;
+}
+
+@keyframes typing {
+  from {
+    width: 0
+  }
+}
+    
+@keyframes effect {
+  50% {
+    border-color: transparent
+  }
+}
+
+@font-face {
+    font-family: 'J'; 
+    src: url('/Fonts/JotiOne.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal; 
+}
+
+@font-face {
+    font-family: 'C'; 
+    src: url('/Fonts/Courgette-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal; 
+}
