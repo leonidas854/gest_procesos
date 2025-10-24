@@ -1,0 +1,13 @@
+.titulo-calculadora {
+    text-align: center;
+    font-size: 3.5rem;
+    font-weight: bold;
+    font-family: 'N', serif;
+}
+
+@font-face {
+    font-family: 'N'; 
+    src: url('/Fonts/austinbold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal; 
+}

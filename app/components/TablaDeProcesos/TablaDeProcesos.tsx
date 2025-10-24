@@ -11,8 +11,17 @@ interface Proceso {
   tiempoLlegada?: number;
 }
 
+
+interface TablaDeProcesosProps {
+  algoritmo?: string;
+  cantidadProcesos?: number;
+  mostrarPrioridades?: boolean;
+  mostrarTiempoLlegada?: boolean;
+  onProcesosChange?: (procesos: Proceso[]) => void;
+}
+
 // --- COMPONENTE PRINCIPAL ---
-const TablaDeProcesos: React.FC = () => {
+const TablaDeProcesos: React.FC<TablaDeProcesosProps> = ({ algoritmo }) => {
   // Estados principales
   const [cantidadProcesos, setCantidadProcesos] = useState(3);
   const [mostrarPrioridades, setMostrarPrioridades] = useState(false);
@@ -123,6 +132,7 @@ const TablaDeProcesos: React.FC = () => {
                   />
                 </div>
               </div>
+              <button className="calculate-button">Calcular Algoritmo</button>
             </div>
           </div>
         </section>
@@ -219,7 +229,6 @@ const TablaDeProcesos: React.FC = () => {
                 Procesos listos: {procesos.length}
               </p>
             </div>
-            <button className="calculate-button">Calcular Algoritmo</button>
           </div>
         </section>
       </div>

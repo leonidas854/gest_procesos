@@ -1,8 +1,16 @@
+'use client';
+import { useState } from 'react';
 import Titulo from './components/Titulo/Titulo';
-import Botones from './components/Botones/botonesMov';
+import EfectosBotones from './components/Botones/botonesMov';
 {/* import './margen.css'; */}
 
 export default function Page() {
+    const [algoritmoSeleccionado, setAlgoritmoSeleccionado] = useState('');
+
+const handleAlgoritmoSeleccionado = (nombreAlgoritmo: string) => {
+    setAlgoritmoSeleccionado(nombreAlgoritmo);
+  };
+
   return (
     <main className="flex min-h-screen">
       {/* Sección izquierda */}
@@ -20,7 +28,7 @@ export default function Page() {
           {/* Usas directamente la clase barbero */}
           <div className='barbero'>
             <div className='seccion-botones'> 
-              <Botones /> 
+              <EfectosBotones onAlgoritmoSeleccionado={handleAlgoritmoSeleccionado} />
             </div>
           </div>
         </div>
