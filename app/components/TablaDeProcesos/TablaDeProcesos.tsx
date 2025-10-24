@@ -1,79 +1,230 @@
-import React from 'react';
-import './TablaDeProcesos.css';
+"use client";
+import React, { useState, useEffect } from "react";
+import "./TablaDeProcesos.css";
 
-interface Process {
+// --- INTERFACES ---
+interface Proceso {
   id: number;
-  tiempoRafaga: number;
-  tiempoLlegada: number;
+  nombre: string;
+  tiempoCPU: number;
+  nivelPrioridad?: number;
+  tiempoLlegada?: number;
 }
 
-interface ProcessTableProps {
-  processes: Process[];
-  onProcessChange: (id: number, field: string, value: number) => void;
-  onAddProcess: () => void;
-  onRemoveProcess: (id: number) => void;
-}
+// --- COMPONENTE PRINCIPAL ---
+const TablaDeProcesos: React.FC = () => {
+  // Estados principales
+  const [cantidadProcesos, setCantidadProcesos] = useState(3);
+  const [mostrarPrioridades, setMostrarPrioridades] = useState(false);
+  const [mostrarTiempoLlegada, setMostrarTiempoLlegada] = useState(false);
+  const [procesos, setProcesos] = useState<Proceso[]>([]);
+  const [quantum, setQuantum] = useState(2);
+  const [cambioContexto, setCambioContexto] = useState(0);
 
-const ProcessTable: React.FC<ProcessTableProps> = ({
-  processes,
-  onProcessChange,
-  onAddProcess,
-  onRemoveProcess
-}) => {
+  // Generar procesos cuando cambia la cantidad o configuración
+  useEffect(() => {
+    const nuevosProcesos: Proceso[] = [];
+    for (let i = 1; i <= cantidadProcesos; i++) {
+      nuevosProcesos.push({
+        id: i,
+        nombre: `P${i}`,
+        tiempoCPU: 0,
+        nivelPrioridad: mostrarPrioridades ? 0 : undefined,
+        tiempoLlegada: mostrarTiempoLlegada ? 0 : undefined,
+      });
+    }
+    setProcesos(nuevosProcesos);
+  }, [cantidadProcesos, mostrarPrioridades, mostrarTiempoLlegada]);
+
+  // Cambiar valores de las celdas
+  const handleCambioValor = (id: number, campo: keyof Proceso, valor: string) => {
+    const nuevosProcesos = procesos.map((p) =>
+      p.id === id ? { ...p, [campo]: campo === "nombre" ? valor : Number(valor) } : p
+    );
+    setProcesos(nuevosProcesos);
+  };
+
+  // Columnas a mostrar
+  const columnas = [
+    { key: "nombre", label: "Nombre de Proceso", fijo: true },
+    { key: "tiempoCPU", label: "Tiempo de CPU", fijo: true },
+    { key: "nivelPrioridad", label: "Nivel de Prioridad", mostrar: mostrarPrioridades },
+    { key: "tiempoLlegada", label: "Tiempo de Llegada", mostrar: mostrarTiempoLlegada },
+  ].filter((col) => col.fijo || col.mostrar);
+
   return (
-    <div className="process-table-container">
-      <h3>CONTENIDO DE PROCESOS</h3>
-      
-      <div className="table-controls">
-        <button className="add-btn" onClick={onAddProcess}>
-          + Agregar Proceso
-        </button>
-      </div>
+    <main className="main-page">
+      <div className="content-wrapper">
+        <div className="top-section">
 
-      <table className="process-table">
-        <thead>
-          <tr>
-            <th>Proceso</th>
-            <th>Tiempo de Ráfaga</th>
-            <th>Tiempo de Llegada</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {processes.map((process) => (
-            <tr key={process.id}>
-              <td>P{process.id}</td>
-              <td>
+        {/* --- SECCIÓN IZQUIERDA --- */}
+        <section className="input-section">
+          <div className="card">
+            <h2 className="main-header">DATOS INICIALES</h2>
+
+            <div className="control-group">
+              {/* CANTIDAD DE PROCESOS */}
+              <div>
+                <label className="label">CANTIDAD DE PROCESOS</label>
                 <input
                   type="number"
-                  value={process.tiempoRafaga}
-                  onChange={(e) => onProcessChange(process.id, 'tiempoRafaga', Number(e.target.value))}
-                  min="0"
+                  value={cantidadProcesos}
+                  onChange={(e) => setCantidadProcesos(Number(e.target.value))}
+                  min="1"
+                  max="20"
+                  className="input-field"
                 />
-              </td>
-              <td>
-                <input
-                  type="number"
-                  value={process.tiempoLlegada}
-                  onChange={(e) => onProcessChange(process.id, 'tiempoLlegada', Number(e.target.value))}
-                  min="0"
-                />
-              </td>
-              <td>
-                <button 
-                  className="remove-btn"
-                  onClick={() => onRemoveProcess(process.id)}
-                  disabled={processes.length <= 1}
-                >
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+              </div>
+
+              {/* CHECKBOXES */}
+              <div className="grid-controls">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={mostrarPrioridades}
+                    onChange={(e) => setMostrarPrioridades(e.target.checked)}
+                    className="checkbox-input"
+                  />
+                  <span className="checkbox-span">NIVEL DE PRIORIDADES</span>
+                </label>
+
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={mostrarTiempoLlegada}
+                    onChange={(e) => setMostrarTiempoLlegada(e.target.checked)}
+                    className="checkbox-input"
+                  />
+                  <span className="checkbox-span">TIEMPO DE LLEGADA</span>
+                </label>
+              </div>
+
+              {/* QUANTUM Y CAMBIO DE CONTEXTO */}
+              <div className="grid-controls">
+                <div>
+                  <label className="label">Q (quantum)</label>
+                  <input
+                    type="number"
+                    value={quantum}
+                    onChange={(e) => setQuantum(Number(e.target.value))}
+                    min="0"
+                    className="input-field"
+                  />
+                </div>
+
+                <div>
+                  <label className="label">Cambio de contexto</label>
+                  <input
+                    type="number"
+                    value={cambioContexto}
+                    onChange={(e) => setCambioContexto(Number(e.target.value))}
+                    min="0"
+                    className="input-field"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        {/* TABLA DE PROCESOS -- QUE ESTE A LA DERECHA DE DATOS INICIALES */}
+        <div className="tabla-procesos-container">
+              <h3>CONTENIDO DE PROCESOS</h3>
+
+              <div className="tabla-wrapper">
+                <table className="tabla-procesos">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      {columnas.map((col) => (
+                        <th key={col.key}>{col.label}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {procesos.map((proceso, index) => (
+                      <tr key={proceso.id}>
+                        <td className="numero-fila">{index + 1}</td>
+                        <td>
+                          <input
+                            type="text"
+                            value={proceso.nombre}
+                            onChange={(e) =>
+                              handleCambioValor(proceso.id, "nombre", e.target.value)
+                            }
+                            className="input-nombre"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            value={proceso.tiempoCPU}
+                            onChange={(e) =>
+                              handleCambioValor(proceso.id, "tiempoCPU", e.target.value)
+                            }
+                            min="0"
+                            className="input-numero"
+                          />
+                        </td>
+
+                        {mostrarPrioridades && (
+                          <td>
+                            <input
+                              type="number"
+                              value={proceso.nivelPrioridad ?? ""}
+                              onChange={(e) =>
+                                handleCambioValor(proceso.id, "nivelPrioridad", e.target.value)
+                              }
+                              min="0"
+                              className="input-numero"
+                            />
+                          </td>
+                        )}
+
+                        {mostrarTiempoLlegada && (
+                          <td>
+                            <input
+                              type="number"
+                              value={proceso.tiempoLlegada ?? ""}
+                              onChange={(e) =>
+                                handleCambioValor(proceso.id, "tiempoLlegada", e.target.value)
+                              }
+                              min="0"
+                              className="input-numero"
+                            />
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="resumen-configuracion">
+                <strong>Procesos generados:</strong> {cantidadProcesos}
+              </div>
+            </div>
+          </div>
+
+
+
+        {/* --- SECCIÓN PARA ABAJO --- */}
+        <section className="results-section">
+          <div className="card">
+            <h2 className="main-header">RESULTADOS</h2>
+            <div className="results-placeholder">
+              <p>Los resultados aparecerán aquí después del cálculo</p>
+              <p className="results-placeholder-small">
+                Procesos listos: {procesos.length}
+              </p>
+            </div>
+            <button className="calculate-button">Calcular Algoritmo</button>
+          </div>
+        </section>
+      </div>
+    </main>
   );
 };
 
-export default ProcessTable;
+export default TablaDeProcesos;
