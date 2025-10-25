@@ -4,6 +4,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Calculadora de Procesos",
   description: "Descubre aprendiendo con patos de goma.",
+  icons: {
+    icon: "/pati.webp", 
+  },
 };
 
 export default function RootLayout({

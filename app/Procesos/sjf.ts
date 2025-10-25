@@ -52,11 +52,17 @@ export const sjf_algoritmo = (data: input): Result => {
         procesosListos.sort((a, b) => a.t_cpu - b.t_cpu);
         const procesoActual = procesosListos[0];
 
-  
-        const tiempoEspera = tiempoActual - procesoActual.t_llegada;
+        let tiempoEspera :number;
+        if(procesoActual.t_llegada===0){
+                tiempoEspera = tiempoActual - procesoActual.t_llegada;
+        }else{
+            tiempoEspera = tiempoActual+1 - procesoActual.t_llegada;
+        }
+
         resultadosEspera[procesoActual.indiceOriginal] = tiempoEspera;
 
         const tiempoInicioEjecucion = tiempoActual;
+
         const tiempoFinEjecucion = tiempoActual + procesoActual.t_cpu;
         
         cronograma.push({
@@ -68,6 +74,14 @@ export const sjf_algoritmo = (data: input): Result => {
 
 
         tiempoActual = tiempoFinEjecucion;
+
+        let tiempoRetorno_actual :number;
+        if(procesoActual.t_llegada===0){
+            procesoActual.t_llegada = procesoActual.t_llegada;
+        }else{
+            procesoActual.t_llegada -=1;
+        }
+        
         resultadosRetorno[procesoActual.indiceOriginal] = tiempoActual - procesoActual.t_llegada;
         
         procesosCompletados.push(procesoActual);

@@ -26,7 +26,7 @@ const DiagramaGantt: React.FC<DiagramaGanttProps> = ({ resultado }) => {
     );
   }
 
-  // Procesar datos para el diagrama
+  // Convertir directamente el cronograma a tareas
   const tasks: GanttTask[] = resultado.cronograma.map((item, index) => ({
     id: `task-${index}`,
     name: item.proceso,
@@ -36,43 +36,62 @@ const DiagramaGantt: React.FC<DiagramaGanttProps> = ({ resultado }) => {
   }));
 
   // Encontrar tiempo máximo
-  const maxTime = Math.max(...tasks.map(task => task.end));
+  const maxTime = Math.max(...tasks.map(task => task.end), 0);
   
   // Generar escala de tiempo
   const timeScale = Array.from({ length: maxTime + 1 }, (_, i) => i);
 
+  // Obtener procesos únicos
+  const uniqueProcesses = Array.from(new Set(tasks.map(task => task.name)));
+
   return (
-    <div className="gantt-chart">
-      {/* Header del diagrama */}
-      <div className="gantt-header">
-        <div className="gantt-header-left">
-          <div className="header-cell process-header">Proceso</div>
-        </div>
-        <div className="gantt-header-right">
-          {timeScale.map(time => (
-            <div key={time} className="header-cell time-cell">
-              {time}
-            </div>
-          ))}
-        </div>
+    <div className="gantt-chart-responsive">
+      {/* Header de tiempos */}
+      <div className="gantt-time-header">
+        <div className="time-header-cell process-label-header">Proceso</div>
+        {timeScale.map(time => (
+          <div key={time} className="time-header-cell">
+            {time}
+          </div>
+        ))}
       </div>
 
       {/* Cuerpo del diagrama */}
-      <div className="gantt-body">
-        {tasks.map((task, index) => (
-          <GanttRow 
-            key={task.id}
-            task={task}
-            maxTime={maxTime}
-            colorIndex={index}
-          />
+      <div className="gantt-body-responsive">
+        {uniqueProcesses.map((processName) => (
+          <div key={processName} className="gantt-row-responsive">
+            <div className="process-label">{processName}</div>
+            
+            <div className="gantt-bars-container">
+              {timeScale.map(time => (
+                <div key={time} className="time-cell"></div>
+              ))}
+              
+              {tasks
+                .filter(task => task.name === processName)
+                .map((task, index) => (
+                  <div
+                    key={`${task.id}-${index}`}
+                    className="gantt-bar-responsive"
+                    style={{
+                      left: `${task.start * 40}px`,
+                      width: `${task.duration * 40}px`,
+                      backgroundColor: getColor(uniqueProcesses.indexOf(processName)),
+                    }}
+                  >
+                    <span className="bar-label">{task.name}</span>
+                  </div>
+                ))}
+            </div>
+          </div>
         ))}
       </div>
 
       {/* Timeline inferior */}
-      <div className="gantt-timeline">
+      <div className="gantt-timeline-responsive">
+        <div className="timeline-spacer"></div>
         {timeScale.map(time => (
-          <div key={time} className="timeline-marker">
+          <div key={time} className="timeline-marker-responsive">
             <span>{time}</span>
           </div>
         ))}
@@ -81,53 +100,25 @@ const DiagramaGantt: React.FC<DiagramaGanttProps> = ({ resultado }) => {
   );
 };
 
-// Componente para cada fila del Gantt
-interface GanttRowProps {
-  task: GanttTask;
-  maxTime: number;
-  colorIndex: number;
-}
-
-const GanttRow: React.FC<GanttRowProps> = ({ task, maxTime, colorIndex }) => {
-  const left = (task.start / maxTime) * 100;
-  const width = (task.duration / maxTime) * 100;
-
-  return (
-    <div className="gantt-row">
-      {/* Etiqueta del proceso */}
-      <div className="gantt-row-label">
-        <span>{task.name}</span>
-      </div>
-      
-      {/* Área de la barra */}
-      <div className="gantt-row-bars">
-        {/* Línea de tiempo de fondo */}
-        <div className="gantt-background-line"></div>
-        
-        {/* Barra del proceso */}
-        <div
-          className="gantt-task-bar"
-          style={{
-            left: `${left}%`,
-            width: `${width}%`,
-            backgroundColor: getColor(colorIndex),
-          }}
-        >
-          <span className="task-bar-label">
-            {task.name} ({task.duration}u)
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Función mejorada para colores
+// Función para colores
 function getColor(index: number): string {
   const colors = [
-    "#4F46E5", "#059669", "#D97706", "#DC2626", 
-    "#9333EA", "#0EA5E9", "#16A34A", "#F59E0B",
-    "#EF4444", "#8B5CF6", "#06B6D4", "#84CC16"
+    "#B04C01", // Marrón intenso base
+    "#C56302", // Naranja oscuro tostado
+    "#C98402", // Naranja miel
+    "#F4AE3F", // Dorado suave
+    "#F6DE36", // Amarillo vibrante
+    "#FAE68F", // Amarillo claro pastel
+    "#F8F4BD", // Crema cálido
+    "#F3C24D", // Dorado brillante
+    "#E6922A", // Naranja suave
+    "#D87B00", // Ámbar fuerte
+    "#A64B00", // Marrón rojizo
+    "#FFD36E", // Amarillo cálido suave
+    "#F7E19A", // Beige dorado
+    "#E0A800", // Mostaza viva
+    "#F5C768", // Dorado pastel
+    "#C27E00"  // Ocre dorado
   ];
   return colors[index % colors.length];
 }

@@ -10,7 +10,7 @@ export default function CalculadoraPage() {
   return (
     <div>
       <h1 className="titulo-calculadora">
-        Algoritmo seleccionado: {algoritmo}
+        Algoritmo {algoritmo}
       </h1>
 
       <TablaDeProcesos algoritmo={algoritmo} />

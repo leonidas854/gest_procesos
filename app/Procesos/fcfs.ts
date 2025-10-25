@@ -39,6 +39,13 @@ export const fcfs_algoritmo = (data: input): Result => {
             tiempoActual = proceso.t_llegada;
         }
 
+
+        if(proceso.t_llegada ===0){
+            proceso.t_llegada = proceso.t_llegada;
+        }else{
+            proceso.t_llegada-=1;
+        }
+
   
         resultadosEspera[proceso.indiceOriginal] = tiempoActual - proceso.t_llegada;
 

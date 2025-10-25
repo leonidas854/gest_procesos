@@ -113,7 +113,7 @@ background: linear-gradient(to right, #f5af19, #f12711); /* W3C, IE 10+/ Edge, F
 }
 
 .calculate-button:hover {
-  background: #0056b3;
+  background: #000000;  /* fallback for old browsers */
 }
 
 /* Estilos para la sección de resultados */
@@ -127,14 +127,14 @@ background: linear-gradient(to right, #f5af19, #f12711); /* W3C, IE 10+/ Edge, F
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.2rem;
 }
 
 .result-card {
   background-color: #f8f9fa;
   border-radius: 8px;
   padding: 1.5rem;
-  border-left: 4px solid #3498db;
+  border-left: 4px solid #f5af19;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -174,7 +174,7 @@ background: linear-gradient(to right, #f5af19, #f12711); /* W3C, IE 10+/ Edge, F
   display: flex;
   justify-content: space-between;
   padding: 0.75rem;
-  background-color: #e8f4fc;
+  background-color: #FFD6CA;
   border-radius: 6px;
   font-weight: bold;
 }

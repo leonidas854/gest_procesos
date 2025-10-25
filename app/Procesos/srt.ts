@@ -46,7 +46,16 @@ export const srt_algoritmo = (data: input): Result => {
 
         if (procesoActual.tiempoRestante === 0) {
             procesosCompletados++;
-            const tiempoFinalizacion = tiempoActual;
+            let tiempoFinalizacion: number;
+            if(procesoActual.t_llegada ===0) {
+                tiempoFinalizacion = tiempoActual;
+            }else{
+               tiempoFinalizacion = tiempoActual+1;
+            }
+
+
+            
+            
             resultadosRetorno[procesoActual.indiceOriginal] = tiempoFinalizacion - procesoActual.t_llegada;
             resultadosEspera[procesoActual.indiceOriginal] = resultadosRetorno[procesoActual.indiceOriginal] - procesoActual.t_cpu;
         }

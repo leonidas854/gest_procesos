@@ -2,12 +2,29 @@
     text-align: center;
     font-size: 3.5rem;
     font-weight: bold;
-    font-family: 'N', serif;
+    font-family: 'N', serif; 
+    background-image: url("../../public/burbu.gif");
+    background-color: aliceblue;
+
+
+    background-position: center; 
+}
+
+body {
+    background-color: #FADB9C;
+    font-family: 'P', serif; 
 }
 
 @font-face {
     font-family: 'N'; 
     src: url('/Fonts/austinbold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal; 
+}
+
+@font-face {
+    font-family: 'P'; 
+    src: url('/Fonts/DotGothic16-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal; 
 }

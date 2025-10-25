@@ -2,7 +2,7 @@ import {input,
     Result,
     GanttBlock,
     ProcesoDetallado
-} from "..//types/process";
+} from "../types/process";
 
 
 export const rr_algoritmo = (data: input): Result => {
@@ -10,9 +10,11 @@ export const rr_algoritmo = (data: input): Result => {
         throw new Error('El algoritmo Round Robin requiere un "quantum" positivo.');
     }
 
+    const ctx = data.ctx ?? 0;
     const n = data.procesos.length;
     const quantum = data.quantum;
     const t_llegada = data.t_Llegada ?? Array(n).fill(0);
+    
 
     let procesos: ProcesoDetallado[] = data.procesos.map((proc, i) => ({
         nombre: proc,
@@ -33,6 +35,9 @@ export const rr_algoritmo = (data: input): Result => {
     let tiempoActual = 0;
     let procesosCompletados = 0;
     let indiceProximoProceso = 0;
+    
+
+    let ultimoProcesoEnCPU: ProcesoDetallado | null = null;
 
     while (procesosCompletados < n) {
         while (indiceProximoProceso < n && procesos[indiceProximoProceso].t_llegada <= tiempoActual) {
@@ -46,12 +51,29 @@ export const rr_algoritmo = (data: input): Result => {
                  cronograma.push({ proceso: 'IDLE', inicio: tiempoActual, fin: proximaLlegada, duracion: proximaLlegada - tiempoActual });
             }
             tiempoActual = proximaLlegada;
+            ultimoProcesoEnCPU = null;
             continue;
         }
 
         const procesoActual = colaDeListos.shift()!;
-        const tiempoDeEjecucion = Math.min(quantum, procesoActual.tiempoRestante!); 
+
+        if (ctx > 0 && ultimoProcesoEnCPU !== null && ultimoProcesoEnCPU.nombre !== procesoActual.nombre) {
+            const inicioCtx = tiempoActual;
+            tiempoActual += ctx;
+            cronograma.push({
+                proceso: 'CTX.',
+                inicio: inicioCtx,
+                fin: tiempoActual,
+                duracion: ctx
+            });
+            
+            while (indiceProximoProceso < n && procesos[indiceProximoProceso].t_llegada <= tiempoActual) {
+                colaDeListos.push(procesos[indiceProximoProceso]);
+                indiceProximoProceso++;
+            }
+        }
         
+        const tiempoDeEjecucion = Math.min(quantum, procesoActual.tiempoRestante!); 
         const inicioEjecucion = tiempoActual;
         
         cronograma.push({
@@ -73,10 +95,12 @@ export const rr_algoritmo = (data: input): Result => {
             colaDeListos.push(procesoActual);
         } else {
             procesosCompletados++;
-            const tiempoFinalizacion = tiempoActual;
-            resultadosRetorno[procesoActual.indiceOriginal] = tiempoFinalizacion - procesoActual.t_llegada;
+            resultadosRetorno[procesoActual.indiceOriginal] = tiempoActual - procesoActual.t_llegada;
             resultadosEspera[procesoActual.indiceOriginal] = resultadosRetorno[procesoActual.indiceOriginal] - procesoActual.t_cpu;
         }
+
+
+        ultimoProcesoEnCPU = procesoActual;
     }
 
     const totalEspera = resultadosEspera.reduce((a, b) => a + b, 0);
@@ -88,7 +112,7 @@ export const rr_algoritmo = (data: input): Result => {
         t_retorno: resultadosRetorno,
         t_promedio_espera: parseFloat((totalEspera / n).toFixed(2)),
         t_promedio_retorno: parseFloat((totalRetorno / n).toFixed(2)),
-        tipo: 'Round Robin (RR)',
+        tipo: `Round Robin`,
         cronograma: cronograma,
     };
 };
