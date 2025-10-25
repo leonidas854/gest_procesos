@@ -1,110 +1,65 @@
-/* --- ESTILOS GENERALES DEL CONTENEDOR GANTT --- */
 .gantt-container {
-  display: flex;
-  border: 1px solid #e0e0e0;
+  position: relative;
+  width: 100%;
+  background: #fafafa;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  overflow: hidden;
-  background-color: #fcfcfc;
-  margin-top: 1.5rem;
-  min-height: 300px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 0.85rem;
-}
-.gantt-task-list {
-  width: 150px;
-  background-color: #f7f7f7;
-  border-right: 1px solid #e0e0e0;
-  flex-shrink: 0;
-  padding-top: 25px;
-  overflow-y: auto;
-}
-
-.gantt-task-list-item {
-  padding: 8px 12px;
-  border-bottom: 1px solid #eee;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  background-color: #fdfdfd;
-}
-
-.gantt-task-list-item:last-child {
-  border-bottom: none;
-}
-
-.gantt-time-scale {
-  flex-grow: 1;
+  padding: 1rem;
   overflow-x: auto;
-  position: relative;
 }
 
-.gantt-time-scale-header {
+.gantt-header {
   display: flex;
-  border-bottom: 1px solid #e0e0e0;
-  background-color: #f0f0f0;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #666;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 0.5rem;
 }
 
-.time-unit {
-  min-width: 40px;
-  padding: 4px 0;
+.gantt-time-cell {
+  flex: 1;
   text-align: center;
-  font-weight: bold;
-  color: #555;
-  border-right: 1px solid #e9e9e9;
 }
 
-.gantt-time-scale-body {
+.gantt-body {
   position: relative;
+  height: 60px;
+  background: repeating-linear-gradient(
+    to right,
+    #f9f9f9 0,
+    #f9f9f9 19px,
+    #eee 20px
+  );
+  border-radius: 6px;
 }
 
-.gantt-row {
-  display: flex;
-  height: 40px;
-  border-bottom: 1px solid #eee;
-  position: relative;
-}
-
-.gantt-row:last-child {
-  border-bottom: none;
-}
-
-.gantt-grid-cell {
-  min-width: 40px;
-  border-right: 1px dotted #f0f0f0;
-}
-
-.time-unit.weekend,
-.gantt-grid-cell.weekend {
-  background-color: #fafafa;
-}
-
-/* --- ESTILOS DE LAS BARRAS DE GANTT --- */
 .gantt-bar {
   position: absolute;
-  height: 70%;
-  top: 15%;
-  background-color: #4CAF50;
-  border-radius: 4px;
+  top: 10px;
+  height: 40px;
+  border-radius: 8px;
+  color: white;
+  text-align: center;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   transition: all 0.3s ease;
 }
 
+.gantt-bar-label {
+  position: relative;
+  z-index: 2;
+}
+
 .gantt-bar:hover {
-  background-color: #43a047;
+  opacity: 0.85;
   transform: scale(1.02);
+}
+
+.gantt-placeholder {
+  text-align: center;
+  color: #888;
+  font-style: italic;
 }

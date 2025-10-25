@@ -1,6 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { input_data } from "../../Procesos/Resultado";
+import { input, Result } from "../../types/process";
 import "./TablaDeProcesos.css";
+import DiagramaGantt from "../diagramaGantt/diagramaGantt";
 
 // --- INTERFACES ---
 interface Proceso {
@@ -14,10 +17,6 @@ interface Proceso {
 
 interface TablaDeProcesosProps {
   algoritmo?: string;
-  cantidadProcesos?: number;
-  mostrarPrioridades?: boolean;
-  mostrarTiempoLlegada?: boolean;
-  onProcesosChange?: (procesos: Proceso[]) => void;
 }
 
 // --- COMPONENTE PRINCIPAL ---
@@ -29,29 +28,56 @@ const TablaDeProcesos: React.FC<TablaDeProcesosProps> = ({ algoritmo }) => {
   const [procesos, setProcesos] = useState<Proceso[]>([]);
   const [quantum, setQuantum] = useState(2);
   const [cambioContexto, setCambioContexto] = useState(0);
+  const [resultado, setResultado] = useState<Result | null>(null);
+
 
   // Generar procesos cuando cambia la cantidad o configuración
-  useEffect(() => {
-    const nuevosProcesos: Proceso[] = [];
-    for (let i = 1; i <= cantidadProcesos; i++) {
-      nuevosProcesos.push({
-        id: i,
-        nombre: `P${i}`,
-        tiempoCPU: 0,
-        nivelPrioridad: mostrarPrioridades ? 0 : undefined,
-        tiempoLlegada: mostrarTiempoLlegada ? 0 : undefined,
-      });
-    }
-    setProcesos(nuevosProcesos);
+ useEffect(() => {
+    const nuevos: Proceso[] = Array.from({ length: cantidadProcesos }, (_, i) => ({
+      id: i + 1,
+      nombre: `P${i + 1}`,
+      tiempoCPU: 0,
+      nivelPrioridad: mostrarPrioridades ? 0 : undefined,
+      tiempoLlegada: mostrarTiempoLlegada ? 0 : undefined,
+    }));
+    setProcesos(nuevos);
   }, [cantidadProcesos, mostrarPrioridades, mostrarTiempoLlegada]);
 
   // Cambiar valores de las celdas
   const handleCambioValor = (id: number, campo: keyof Proceso, valor: string) => {
-    const nuevosProcesos = procesos.map((p) =>
-      p.id === id ? { ...p, [campo]: campo === "nombre" ? valor : Number(valor) } : p
+    setProcesos(prev =>
+      prev.map(p => (p.id === id ? { ...p, [campo]: campo === "nombre" ? valor : Number(valor) } : p))
     );
-    setProcesos(nuevosProcesos);
   };
+
+  // --- CÁLCULO PRINCIPAL ---
+  const handleCalcular = () => {
+    if (!algoritmo) return alert("Selecciona un algoritmo antes de calcular");
+
+    const nombres = procesos.map(p => p.nombre);
+    const t_cpu = procesos.map(p => p.tiempoCPU);
+    const t_llegada = procesos.map(p => p.tiempoLlegada ?? 0);
+    const prioridad = procesos.map(p => p.nivelPrioridad ?? 0);
+
+    const data: input = {
+      procesos: nombres,
+      Tipo: algoritmo as any,
+      t_cpu,
+      t_Llegada: t_llegada,
+      prioridad,
+      quantum,
+      ctx: cambioContexto,
+    };
+
+     try {
+    const result = input_data(data);
+    console.log("Resultado del algoritmo:", result);
+    setResultado(result);
+  } catch (error) {
+    console.error("Error al ejecutar el algoritmo:", error);
+    alert(`Error al calcular el algoritmo: ${(error as Error).message}`);
+  }
+};
 
   // Columnas a mostrar
   const columnas = [
@@ -132,7 +158,7 @@ const TablaDeProcesos: React.FC<TablaDeProcesosProps> = ({ algoritmo }) => {
                   />
                 </div>
               </div>
-              <button className="calculate-button">Calcular Algoritmo</button>
+              <button className="calculate-button" onClick={handleCalcular}>Calcular Algoritmo</button>
             </div>
           </div>
         </section>
@@ -223,12 +249,19 @@ const TablaDeProcesos: React.FC<TablaDeProcesosProps> = ({ algoritmo }) => {
         <section className="results-section">
           <div className="card">
             <h2 className="main-header">RESULTADOS</h2>
-            <div className="results-placeholder">
-              <p>Los resultados aparecerán aquí después del cálculo</p>
-              <p className="results-placeholder-small">
-                Procesos listos: {procesos.length}
-              </p>
-            </div>
+
+            {resultado ? (
+              <>
+                <DiagramaGantt resultado={resultado} />
+              </>
+            ) : (
+              <div className="results-placeholder">
+                <p>Los resultados aparecerán aquí después del cálculo.</p>
+                <p className="results-placeholder-small">
+                  Procesos listos: {procesos.length}
+                </p>
+              </div>
+            )}
           </div>
         </section>
       </div>

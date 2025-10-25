@@ -2,15 +2,13 @@ import {Tipo,
     Combinacion,
     input,
     Result
-} from  "../../types/process"
-
-
-import { Descripciones }from "../../data/planificacionInfo"
-
-import { sjf_algoritmo } from "./sjf";
-import { srt_algoritmo } from "./srt";
-import { fcfs_algoritmo } from "./fcfs";
-import { prioridad_algoritmo } from "./prioridades";
+} from  "../types/process"
+import { Descripciones }from "../data/planificacionInfo"
+import { sjf_algoritmo } from "./SJF";
+import { srt_algoritmo } from "./SRT";
+import { fcfs_algoritmo } from "./FCFS";
+import { prioridad_algoritmo } from "./PRIORIDADES";
+{/*import { rr_algoritmo } from "./RR";*/}
 
 
 function generar_descripcion(tipo:Tipo , combinacion?:Combinacion){

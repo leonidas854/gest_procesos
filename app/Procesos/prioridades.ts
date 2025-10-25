@@ -2,7 +2,7 @@ import {input,
     Result,
     GanttBlock,
     ProcesoDetallado
-} from "../../types/process";
+} from "../types/process";
 
 
 export const prioridad_algoritmo = (data: input): Result => {

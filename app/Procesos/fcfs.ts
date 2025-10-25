@@ -3,7 +3,7 @@ import {input,
     Result,
     GanttBlock,
     ProcesoDetallado
-} from "../../types/process";
+} from "../types/process";
 
 
 

@@ -1,3 +1,4 @@
+{/* type -- process.ts*/}
 export type Tipo = 'FCFS' | 'SJF' | 'SRT' | 'RR' | 'PRIORIDAD';
 
 export type Combinacion =
