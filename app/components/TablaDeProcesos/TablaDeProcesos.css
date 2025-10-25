@@ -82,9 +82,17 @@
   border-collapse: collapse;
 }
 
-.tabla-procesos th,
+.tabla-procesos th {
+  background-color: #C98402;
+  color: white;
+  border: 3px solid #C98402;
+  padding: 6px;
+  text-align: center;
+}
+
 .tabla-procesos td {
-  border: 1px solid #ddd;
+  
+  border: 3px solid #C98402;
   padding: 6px;
   text-align: center;
 }
@@ -92,7 +100,7 @@
 .tabla-procesos input {
   width: 90%;
   padding: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid #F6DE31;
   border-radius: 4px;
   text-align: center;
 }
