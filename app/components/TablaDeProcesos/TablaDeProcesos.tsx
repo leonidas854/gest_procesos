@@ -250,7 +250,8 @@ const TablaDeProcesos: React.FC<TablaDeProcesosProps> = ({ algoritmo }) => {
           <div className="card">
             <h2 className="main-header">RESULTADOS</h2>
 
-            {resultado ? (
+            {resultado ? 
+            (
               <>
                 <DiagramaGantt resultado={resultado} />
               </>

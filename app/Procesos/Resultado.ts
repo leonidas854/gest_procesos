@@ -3,12 +3,15 @@ import {Tipo,
     input,
     Result
 } from  "../types/process"
+
+
 import { Descripciones }from "../data/planificacionInfo"
-import { sjf_algoritmo } from "./SJF";
+
+import { sjf_algoritmo } from "./SJF"
 import { srt_algoritmo } from "./SRT";
 import { fcfs_algoritmo } from "./FCFS";
 import { prioridad_algoritmo } from "./PRIORIDADES";
-{/*import { rr_algoritmo } from "./RR";*/}
+import { rr_algoritmo } from "./RR";
 
 
 function generar_descripcion(tipo:Tipo , combinacion?:Combinacion){
@@ -40,7 +43,7 @@ export function input_data(procesos:input):Result{
             result = prioridad_algoritmo(procesos);
             break;
         case "RR":
-            result = sjf_algoritmo(procesos);
+            result = rr_algoritmo(procesos);
             break;
         case "SJF":
             result = sjf_algoritmo(procesos);
