@@ -14,7 +14,6 @@ interface Proceso {
   tiempoLlegada?: number;
 }
 
-
 interface TablaDeProcesosProps {
   algoritmo?: string;
 }
@@ -30,9 +29,8 @@ const TablaDeProcesos: React.FC<TablaDeProcesosProps> = ({ algoritmo }) => {
   const [cambioContexto, setCambioContexto] = useState(0);
   const [resultado, setResultado] = useState<Result | null>(null);
 
-
   // Generar procesos cuando cambia la cantidad o configuración
- useEffect(() => {
+  useEffect(() => {
     const nuevos: Proceso[] = Array.from({ length: cantidadProcesos }, (_, i) => ({
       id: i + 1,
       nombre: `P${i + 1}`,
@@ -69,15 +67,15 @@ const TablaDeProcesos: React.FC<TablaDeProcesosProps> = ({ algoritmo }) => {
       ctx: cambioContexto,
     };
 
-     try {
-    const result = input_data(data);
-    console.log("Resultado del algoritmo:", result);
-    setResultado(result);
-  } catch (error) {
-    console.error("Error al ejecutar el algoritmo:", error);
-    alert(`Error al calcular el algoritmo: ${(error as Error).message}`);
-  }
-};
+    try {
+      const result = input_data(data);
+      console.log("Resultado del algoritmo:", result);
+      setResultado(result);
+    } catch (error) {
+      console.error("Error al ejecutar el algoritmo:", error);
+      alert(`Error al calcular el algoritmo: ${(error as Error).message}`);
+    }
+  };
 
   // Columnas a mostrar
   const columnas = [
@@ -91,170 +89,230 @@ const TablaDeProcesos: React.FC<TablaDeProcesosProps> = ({ algoritmo }) => {
     <main className="main-page">
       <div className="content-wrapper">
         <div className="top-section">
+          {/* --- SECCIÓN IZQUIERDA --- */}
+          <section className="input-section">
+            <div className="card">
+              <h2 className="main-header">DATOS INICIALES</h2>
 
-        {/* --- SECCIÓN IZQUIERDA --- */}
-        <section className="input-section">
-          <div className="card">
-            <h2 className="main-header">DATOS INICIALES</h2>
-
-            <div className="control-group">
-              {/* CANTIDAD DE PROCESOS */}
-              <div>
-                <label className="label">CANTIDAD DE PROCESOS</label>
-                <input
-                  type="number"
-                  value={cantidadProcesos}
-                  onChange={(e) => setCantidadProcesos(Number(e.target.value))}
-                  min="1"
-                  max="20"
-                  className="input-field"
-                />
-              </div>
-
-              {/* CHECKBOXES */}
-              <div className="grid-controls">
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={mostrarPrioridades}
-                    onChange={(e) => setMostrarPrioridades(e.target.checked)}
-                    className="checkbox-input"
-                  />
-                  <span className="checkbox-span">NIVEL DE PRIORIDADES</span>
-                </label>
-
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={mostrarTiempoLlegada}
-                    onChange={(e) => setMostrarTiempoLlegada(e.target.checked)}
-                    className="checkbox-input"
-                  />
-                  <span className="checkbox-span">TIEMPO DE LLEGADA</span>
-                </label>
-              </div>
-
-              {/* QUANTUM Y CAMBIO DE CONTEXTO */}
-              <div className="grid-controls">
+              <div className="control-group">
+                {/* CANTIDAD DE PROCESOS */}
                 <div>
-                  <label className="label">Q (quantum)</label>
+                  <label className="label">CANTIDAD DE PROCESOS</label>
                   <input
                     type="number"
-                    value={quantum}
-                    onChange={(e) => setQuantum(Number(e.target.value))}
-                    min="0"
+                    value={cantidadProcesos}
+                    onChange={(e) => setCantidadProcesos(Number(e.target.value))}
+                    min="1"
+                    max="20"
                     className="input-field"
                   />
                 </div>
 
-                <div>
-                  <label className="label">Cambio de contexto</label>
-                  <input
-                    type="number"
-                    value={cambioContexto}
-                    onChange={(e) => setCambioContexto(Number(e.target.value))}
-                    min="0"
-                    className="input-field"
-                  />
+                {/* CHECKBOXES */}
+                <div className="grid-controls">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={mostrarPrioridades}
+                      onChange={(e) => setMostrarPrioridades(e.target.checked)}
+                      className="checkbox-input"
+                    />
+                    <span className="checkbox-span">NIVEL DE PRIORIDADES</span>
+                  </label>
+
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={mostrarTiempoLlegada}
+                      onChange={(e) => setMostrarTiempoLlegada(e.target.checked)}
+                      className="checkbox-input"
+                    />
+                    <span className="checkbox-span">TIEMPO DE LLEGADA</span>
+                  </label>
                 </div>
+
+                {/* QUANTUM Y CAMBIO DE CONTEXTO */}
+                <div className="grid-controls">
+                  <div>
+                    <label className="label">Q (quantum)</label>
+                    <input
+                      type="number"
+                      value={quantum}
+                      onChange={(e) => setQuantum(Number(e.target.value))}
+                      min="0"
+                      className="input-field"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="label">Cambio de contexto</label>
+                    <input
+                      type="number"
+                      value={cambioContexto}
+                      onChange={(e) => setCambioContexto(Number(e.target.value))}
+                      min="0"
+                      className="input-field"
+                    />
+                  </div>
+                </div>
+                <button className="calculate-button" onClick={handleCalcular}>Calcular Algoritmo</button>
               </div>
-              <button className="calculate-button" onClick={handleCalcular}>Calcular Algoritmo</button>
             </div>
-          </div>
-        </section>
+          </section>
 
+          {/* TABLA DE PROCESOS -- QUE ESTE A LA DERECHA DE DATOS INICIALES */}
+          <div className="tabla-procesos-container">
+            <h3>CONTENIDO DE PROCESOS</h3>
 
-        {/* TABLA DE PROCESOS -- QUE ESTE A LA DERECHA DE DATOS INICIALES */}
-        <div className="tabla-procesos-container">
-              <h3>CONTENIDO DE PROCESOS</h3>
+            <div className="tabla-wrapper">
+              <table className="tabla-procesos">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    {columnas.map((col) => (
+                      <th key={col.key}>{col.label}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {procesos.map((proceso, index) => (
+                    <tr key={proceso.id}>
+                      <td className="numero-fila">{index + 1}</td>
+                      <td>
+                        <input
+                          type="text"
+                          value={proceso.nombre}
+                          onChange={(e) =>
+                            handleCambioValor(proceso.id, "nombre", e.target.value)
+                          }
+                          className="input-nombre"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          value={proceso.tiempoCPU}
+                          onChange={(e) =>
+                            handleCambioValor(proceso.id, "tiempoCPU", e.target.value)
+                          }
+                          min="0"
+                          className="input-numero"
+                        />
+                      </td>
 
-              <div className="tabla-wrapper">
-                <table className="tabla-procesos">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      {columnas.map((col) => (
-                        <th key={col.key}>{col.label}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {procesos.map((proceso, index) => (
-                      <tr key={proceso.id}>
-                        <td className="numero-fila">{index + 1}</td>
-                        <td>
-                          <input
-                            type="text"
-                            value={proceso.nombre}
-                            onChange={(e) =>
-                              handleCambioValor(proceso.id, "nombre", e.target.value)
-                            }
-                            className="input-nombre"
-                          />
-                        </td>
+                      {mostrarPrioridades && (
                         <td>
                           <input
                             type="number"
-                            value={proceso.tiempoCPU}
+                            value={proceso.nivelPrioridad ?? ""}
                             onChange={(e) =>
-                              handleCambioValor(proceso.id, "tiempoCPU", e.target.value)
+                              handleCambioValor(proceso.id, "nivelPrioridad", e.target.value)
                             }
                             min="0"
                             className="input-numero"
                           />
                         </td>
+                      )}
 
-                        {mostrarPrioridades && (
-                          <td>
-                            <input
-                              type="number"
-                              value={proceso.nivelPrioridad ?? ""}
-                              onChange={(e) =>
-                                handleCambioValor(proceso.id, "nivelPrioridad", e.target.value)
-                              }
-                              min="0"
-                              className="input-numero"
-                            />
-                          </td>
-                        )}
+                      {mostrarTiempoLlegada && (
+                        <td>
+                          <input
+                            type="number"
+                            value={proceso.tiempoLlegada ?? ""}
+                            onChange={(e) =>
+                              handleCambioValor(proceso.id, "tiempoLlegada", e.target.value)
+                            }
+                            min="0"
+                            className="input-numero"
+                          />
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-                        {mostrarTiempoLlegada && (
-                          <td>
-                            <input
-                              type="number"
-                              value={proceso.tiempoLlegada ?? ""}
-                              onChange={(e) =>
-                                handleCambioValor(proceso.id, "tiempoLlegada", e.target.value)
-                              }
-                              min="0"
-                              className="input-numero"
-                            />
-                          </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="resumen-configuracion">
-                <strong>Procesos generados:</strong> {cantidadProcesos}
-              </div>
+            <div className="resumen-configuracion">
+              <strong>Procesos generados:</strong> {cantidadProcesos}
             </div>
           </div>
+        </div>
 
-
-
-        {/* --- SECCIÓN PARA ABAJO --- */}
+        {/* --- SECCIÓN DE RESULTADOS --- */}
         <section className="results-section">
           <div className="card">
             <h2 className="main-header">RESULTADOS</h2>
 
-            {resultado ? 
-            (
-              <>
-                <DiagramaGantt resultado={resultado} />
-              </>
+            {resultado ? (
+              <div className="results-container">
+                {/* Grid de resultados */}
+                <div className="results-grid">
+                  <div className="result-card">
+                    <h3>Tiempos de Espera</h3>
+                    <div className="result-list">
+                    {resultado.t_espera.map((tiempo, index) => (
+                      <div key={index} className="result-item">
+                        <span>
+                        {/* Accedemos al nombre del proceso desde el objeto input */}
+                              {(typeof resultado.processes[index] === 'string' 
+                              ? resultado.processes[index] 
+                              : (resultado.processes[index] as any)?.nombre || `Proceso ${index + 1}`
+                              )}:
+                              </span>
+                            <span>{tiempo} ms</span>
+                             </div>
+                         ))}
+                    </div>
+                  </div>
+                  
+                  <div className="result-card">
+                    <h3>Tiempos de Retorno</h3>
+                    <div className="result-list">
+                      {resultado.t_retorno.map((tiempo, index) => (
+                      <div key={index} className="result-item">
+              <span>
+                {(typeof resultado.processes[index] === 'string' 
+                  ? resultado.processes[index] 
+                  : (resultado.processes[index] as any)?.nombre || `Proceso ${index + 1}`
+                )}:
+              </span>
+              <span>{tiempo} ms</span>
+            </div>
+          ))}
+                    </div>
+                  </div>
+                  
+                  <div className="result-card">
+                    <h3>Tiempos Promedio</h3>
+                    <div className="result-averages">
+                      <div className="average-item">
+                        <span>Espera Promedio:</span>
+                        <span>{resultado.t_promedio_espera.toFixed(2)} ms</span>
+                      </div>
+                      <div className="average-item">
+                        <span>Retorno Promedio:</span>
+                        <span>{resultado.t_promedio_retorno.toFixed(2)} ms</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="result-card">
+                    <h3>Información del Algoritmo</h3>
+                    <div className="algorithm-info">
+                      <p><strong>Tipo:</strong> {resultado.tipo}</p>
+                      <p><strong>Descripción:</strong> {resultado.descripcion}</p>
+                      <p><strong>Uso común:</strong> {resultado.uso_comun}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Contenedor separado para el diagrama de Gantt */}
+                <div className="gantt-container">
+                  <h3 className="gantt-title">DIAGRAMA DE GANTT</h3>
+                  <DiagramaGantt resultado={resultado} />
+                </div>
+              </div>
             ) : (
               <div className="results-placeholder">
                 <p>Los resultados aparecerán aquí después del cálculo.</p>

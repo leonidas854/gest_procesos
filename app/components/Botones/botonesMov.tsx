@@ -23,8 +23,8 @@ const EfectosBotones: React.FC<EfectosBotonesProps> = ({ onAlgoritmoSeleccionado
     <section className="buttons">
       <div className="container">
         <button className="btn btn-5" onClick={() => handleClick("FCFS")}>FCFS</button>
-        <button className="btn btn-5" onClick={() => handleClick("PRIORIDADES")}>PRIORIDADES</button>
-        <button className="btn btn-5" onClick={() => handleClick("ROUND ROBIN")}>ROUND ROBIN</button>
+        <button className="btn btn-5" onClick={() => handleClick("PRIORIDAD")}>PRIORIDADES</button>
+        <button className="btn btn-5" onClick={() => handleClick("RR")}>ROUND ROBIN</button>
         <button className="btn btn-5" onClick={() => handleClick("SJF")}>SJF</button>
         <button className="btn btn-5" onClick={() => handleClick("SRT")}>SRT</button>
       </div>
